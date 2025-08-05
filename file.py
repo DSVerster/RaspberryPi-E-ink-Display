@@ -58,7 +58,7 @@ def getRepoDate(path=REPOPATH):
     try:
         result = subprocess.check_output(
             ["git", "log", "-1", "--format=%cd"],
-            cwd=path
+            cwd=path,
             timeout = 3
         ).decode().strip()
         return result
