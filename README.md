@@ -16,6 +16,9 @@ Good luck finding the correct drivers for the screen!
     from datetime import datetime
     from gpiozero import Button
     from signal import pause
+    sys.path.insert(1, "./lib")
+    import epd2in7_V2
+    from PIL import Image, ImageDraw, ImageFont
     
 terminal command for installing modules: 
     

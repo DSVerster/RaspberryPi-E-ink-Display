@@ -1,4 +1,4 @@
-import sys, time, matplotlib, threading
+import sys, time, matplotlib, threading, subprocess
 from datetime import datetime
 from gpiozero import Button
 from signal import pause
@@ -19,6 +19,52 @@ btn1 = Button(5)
 btn2 = Button(6)
 btn3 = Button(13)
 btn4 = Button(19)
+
+###
+# Misc functions
+###
+def getUptime():
+    with open('/proc/uptime', 'r') as f:
+        uptime_seconds = float(f.readline().split()[0])
+    
+    hours = int(uptime_seconds // 3600)
+    minutes = int((uptime_seconds % 3600) // 60)
+    return f"{hours}h {minutes}m"
+
+def getCPUTemp():
+    try:
+        output = subprocess.check_output(["vcgencmd", "measure_temp"]).decode()
+        temp = output.replace("temp=", "").replace("'C\n", "")
+        return f"{temp}°C"
+    except Exception as e:
+        return "N/A"
+
+def getRepoStatus(repo_path="/home/ghost/RaspberryPi-E-ink-Display"):
+    try:
+        subprocess.run(["git", "fetch"], cwd=repo_path, check=True)
+        result = subprocess.check_output(["git", "status"], cwd=repo_path).decode()
+
+        if "Your branch is up to date" in result:
+            return ("Repo: ✅ Up to date")
+        elif "behind" in result:
+            return ("Repo: ❌ Out of date")
+        else:
+            return ("Repo: ❓ Unknown")  # Can't determine
+    except Exception as e:
+        return ("Repo: ❓ Error")
+	
+def get_last_commit_date(repo_path="/home/ghost/RaspberryPi-E-ink-Display"):
+    try:
+        result = subprocess.check_output(
+            ["git", "log", "-1", "--format=%cd"],
+            cwd=repo_path
+        ).decode().strip()
+        return result
+    except:
+        return "Unknown"
+###
+# Display altering functions:
+###
 
 def dispDef(s):
 	image = Image.new('1', (epd.height, epd.width), 255)
@@ -62,6 +108,22 @@ def onWake():
 	draw.text((1,1),cdatetime, font = f, fill=0)
 	epd.display(epd.getbuffer(image))
 
+def deviceInfo():
+	now = datetime.now()
+	ctime = now.strftime("%H:%M:%S")
+	uptime = getUptime()
+	cpuTemp = getCPUTemp()
+	repoStatus = getRepoStatus()
+	
+	image = Image.new('1', (epd.height, epd.width), 255)
+	draw = ImageDraw.Draw(image)
+	f = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 20)
+	draw.text((1,1),("Current time: "+ctime), font = f, fill = 0)
+	draw.text((1, 26),("Uptime: "+ uptime), font = f, fill = 0)
+	draw.text((10, 51),("CPU Temp: " + cpuTemp), font=f, fill=0)
+	draw.text((10, 51),("Repo status: " + repoStatus), font=f, fill=0)
+	epd.display(epd.getbuffer(image))
+
 def timedRefresh(i):
 	while True:
 		time.sleep(i)
@@ -74,16 +136,15 @@ def btnPress(btn):
 		onWake()
 	elif (pinNum == 6):
 		print("Pressed button 2")
-		bigD()
+		deviceInfo()
 	elif (pinNum == 13):
 		print("Pressed button 3")
 		printFont("Hallo\nThis is also a test \nmessage.",24)
 	elif (pinNum == 19):
 		print("Pressed button 4")
-		return
+		bigD()
 	else:
 		print("Unknown error")
-
 
 print("Good day.")
 circle()
