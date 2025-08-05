@@ -42,7 +42,7 @@ def getCPUTemp():
 
 def getRepoStatus(path=REPOPATH):
     try:
-        subprocess.run(["git", "fetch"], cwd=path, check=True)
+        subprocess.run(["git", "fetch"], cwd=path, check=True, timeout = 3)
         result = subprocess.check_output(["git", "status"], cwd=path).decode()
 
         if "Your branch is up to date" in result:
@@ -59,6 +59,7 @@ def getRepoDate(path=REPOPATH):
         result = subprocess.check_output(
             ["git", "log", "-1", "--format=%cd"],
             cwd=path
+            timeout = 3
         ).decode().strip()
         return result
     except:
