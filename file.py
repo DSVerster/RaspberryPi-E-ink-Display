@@ -14,6 +14,7 @@ epd.Clear()
 
 MAXx = 264
 MAXy = 176
+REPOPATH = "/home/ghost/RaspberryPi-E-ink-Display"
 
 btn1 = Button(5)
 btn2 = Button(6)
@@ -39,10 +40,10 @@ def getCPUTemp():
     except Exception as e:
         return "N/A"
 
-def getRepoStatus(repo_path="/home/ghost/RaspberryPi-E-ink-Display"):
+def getRepoStatus(REPOPATH):
     try:
-        subprocess.run(["git", "fetch"], cwd=repo_path, check=True)
-        result = subprocess.check_output(["git", "status"], cwd=repo_path).decode()
+        subprocess.run(["git", "fetch"], cwd=REPOPATH, check=True)
+        result = subprocess.check_output(["git", "status"], cwd=REPOPATH).decode()
 
         if "Your branch is up to date" in result:
             return ("Repo: ✅ Up to date")
@@ -53,11 +54,11 @@ def getRepoStatus(repo_path="/home/ghost/RaspberryPi-E-ink-Display"):
     except Exception as e:
         return ("Repo: ❓ Error")
 	
-def get_last_commit_date(repo_path="/home/ghost/RaspberryPi-E-ink-Display"):
+def getRepoDate(REPOPATH):
     try:
         result = subprocess.check_output(
             ["git", "log", "-1", "--format=%cd"],
-            cwd=repo_path
+            cwd=REPOPATH
         ).decode().strip()
         return result
     except:
@@ -114,14 +115,16 @@ def deviceInfo():
 	uptime = getUptime()
 	cpuTemp = getCPUTemp()
 	repoStatus = getRepoStatus()
+	repoDate = getRepoDate()
 	
 	image = Image.new('1', (epd.height, epd.width), 255)
 	draw = ImageDraw.Draw(image)
 	f = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 20)
 	draw.text((1,1),("Current time: "+ctime), font = f, fill = 0)
 	draw.text((1, 26),("Uptime: "+ uptime), font = f, fill = 0)
-	draw.text((10, 51),("CPU Temp: " + cpuTemp), font=f, fill=0)
-	draw.text((10, 51),("Repo status: " + repoStatus), font=f, fill=0)
+	draw.text((1, 51),("CPU Temp: " + cpuTemp), font = f, fill = 0)
+	draw.text((1, 76),("Repo status: " + repoStatus), font = f, fill = 0)
+	draw.text((1, 101),("Repo date: " + repoDate), font = f, fill = 0)
 	epd.display(epd.getbuffer(image))
 
 def timedRefresh(i):
