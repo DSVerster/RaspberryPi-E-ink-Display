@@ -49,7 +49,7 @@ def bigD():
 
 def onWake():
 	now = datetime.now()
-	cdatetime = now.strftime("%A\n%d %B\n%Y\n\n\n\n%H:%M:%S")
+	cdatetime = now.strftime("%A\n%d %B\n%Y")
 	image = Image.new('1', (epd.height, epd.width), 255)
 	draw = ImageDraw.Draw(image)
 	draw.ellipse((94, 10, 250, 166), outline = 0, width = 7)

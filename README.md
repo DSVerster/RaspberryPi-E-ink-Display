@@ -1,6 +1,23 @@
 # RaspberryPi-E-ink-Display
 This is my repository for my raspberry pi system with an e-ink display
 
+## Hardware (that I am using)
+    RaspberryPi 3A+
+    Waveshare 2.7" ePaper HAT
+
+IMPORTANT: For the RaspberryPi to work with the e-screen, the lib files alre reqquired to bee in the same directory as the python file running the e-screen code
+    cd ~
+    git clone https://github.com/waveshare/e-Paper.git
+Good luck finding the correct drivers for the screen!
+
+## Python modules used:
+    import sys, time, matplotlib
+    from datetime import datetime
+    from gpiozero import Button
+    from signal import pause
+
+terminal command for installing modules: sudo apt-get install python3-rpi.gpio python-imaging python-smbus python-dev
+
 
 ### Running python file once device has started running:
 Create a service file in /etc/systemd/system/{filename}.service
