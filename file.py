@@ -115,8 +115,8 @@ def deviceInfo():
 	ctime = now.strftime("%H:%M:%S")
 	uptime = getUptime()
 	cpuTemp = getCPUTemp()
-	repoStatus = getRepoStatus()
-	repoDate = getRepoDate()
+	repoStatus = getRepoStatus(REPOPATH)
+	repoDate = getRepoDate(REPOPATH)
 	
 	image = Image.new('1', (epd.height, epd.width), 255)
 	draw = ImageDraw.Draw(image)
