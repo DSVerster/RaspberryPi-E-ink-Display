@@ -6,6 +6,7 @@ This is my repository for my raspberry pi system with an e-ink display
     Waveshare 2.7" ePaper HAT
 
 IMPORTANT: For the RaspberryPi to work with the e-screen, the lib files alre reqquired to bee in the same directory as the python file running the e-screen code
+    
     cd ~
     git clone https://github.com/waveshare/e-Paper.git
 Good luck finding the correct drivers for the screen!
@@ -15,9 +16,10 @@ Good luck finding the correct drivers for the screen!
     from datetime import datetime
     from gpiozero import Button
     from signal import pause
-
-terminal command for installing modules: sudo apt-get install python3-rpi.gpio python-imaging python-smbus python-dev
-
+    
+terminal command for installing modules: 
+    
+    sudo apt-get install python3-rpi.gpio python-imaging python-smbus python-dev
 
 ### Running python file once device has started running:
 Create a service file in /etc/systemd/system/{filename}.service
@@ -40,6 +42,7 @@ Service file content example:
     WantedBy=multi-user.target
 
 After which run these in terminal:
+    
     sudo systemctl daemon-reexec
     sudo systemctl daemon-reload    
     sudo systemctl restart {filename}.service

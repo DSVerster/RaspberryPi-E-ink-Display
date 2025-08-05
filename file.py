@@ -12,6 +12,9 @@ epd.init()
 print("Initiated")
 epd.Clear()
 
+MAXx = 264
+MAXy = 176
+
 btn1 = Button(5)
 btn2 = Button(6)
 btn3 = Button(13)
