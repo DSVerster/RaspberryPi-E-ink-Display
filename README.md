@@ -6,18 +6,25 @@ This is my repository for my raspberry pi system with an e-ink display
 Create a service file in /etc/systemd/system/{filename}.service
 Service file content example:
 
-[Unit]
-Description=Run e-screen module
+    [Unit]
+    Description=Run e-screen module
 
-[Service]
-ExecStart=/usr/bin/python3 /home/user/documents/file.py
-WorkingDirectory=/home/user/documents
-StandardOutput=journal
-StandardError=journal
-Restart=on-failure
-RestartSec=2
-User=User
-Environment=PYTHONBUFFERED=1
+    [Service]
+    ExecStart=/usr/bin/python3 /home/user/documents/file.py
+    WorkingDirectory=/home/user/documents
+    StandardOutput=journal
+    StandardError=journal
+    Restart=on-failure
+    RestartSec=2
+    User=User
+    Environment=PYTHONBUFFERED=1
 
-[Install]
-WantedBy=multi-user.target
+    [Install]
+    WantedBy=multi-user.target
+
+After which run these in terminal:
+    sudo systemctl daemon-reexec
+    sudo systemctl daemon-reload    
+    sudo systemctl restart {filename}.service
+
+When editing the service file remember to first disable the service with systemctl and then enable again once changes are applied
