@@ -71,7 +71,7 @@ def btnPress(btn):
 	pinNum = btn.pin.number
 	if (pinNum == 5):
 		print("Pressed button 1")
-		circle()
+		onWake()
 	elif (pinNum == 6):
 		print("Pressed button 2")
 		bigD()
@@ -94,5 +94,5 @@ btn1.when_pressed = btnPress
 btn2.when_pressed = btnPress
 btn3.when_pressed = btnPress
 btn4.when_pressed = btnPress
-threading.Thread(target=timedRefresh, args=(10,), daemon=True).start()
+threading.Thread(target=timedRefresh, args=(720,), daemon=True).start() #Refresh after 12 hours
 pause()
