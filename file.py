@@ -62,9 +62,10 @@ def onWake():
 	draw.text((1,1),cdatetime, font = f, fill=0)
 	epd.display(epd.getbuffer(image))
 
-def timedRefresh(interval=60):
-	time.sleep(15)
-	onWake()
+def timedRefresh(i):
+	while True:
+		time.sleep(i)
+		onWake()
 
 def btnPress(btn):
 	pinNum = btn.pin.number
@@ -93,5 +94,5 @@ btn1.when_pressed = btnPress
 btn2.when_pressed = btnPress
 btn3.when_pressed = btnPress
 btn4.when_pressed = btnPress
-threading.Thread(target=timedRefresh, args=(60,), daemon=True).start()
+threading.Thread(target=timedRefresh, args=(10,), daemon=True).start()
 pause()
