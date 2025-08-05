@@ -124,8 +124,8 @@ def deviceInfo():
 	draw.text((1,1),("Current time: "+ctime), font = f, fill = 0)
 	draw.text((1, 26),("Uptime: "+ uptime), font = f, fill = 0)
 	draw.text((1, 51),("CPU Temp: " + cpuTemp), font = f, fill = 0)
-	draw.text((1, 76),("Repo status: " + repoStatus), font = f, fill = 0)
-	draw.text((1, 101),("Repo date: " + repoDate), font = f, fill = 0)
+	draw.text((1, 76),("Repo status:\n" + repoStatus), font = f, fill = 0)
+	draw.text((1, 126),("Repo date:\n" + repoDate), font = f, fill = 0)
 	epd.display(epd.getbuffer(image))
 
 def timedRefresh(i):
