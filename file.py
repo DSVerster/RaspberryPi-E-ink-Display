@@ -55,14 +55,14 @@ def onWake():
 	cdatetime = now.strftime("%A\n%d %B\n%Y")
 	image = Image.new('1', (epd.height, epd.width), 255)
 	draw = ImageDraw.Draw(image)
-	draw.ellipse((108, 10, 264, 166), outline = 0, width = 7)
-	draw.ellipse((171, 0, 201, 30), outline = 0, fill = 0)
-	draw.ellipse((156, 58, 216, 118), outline = 0, fill = 0)
+	draw.ellipse((108, 20, 264, 176), outline = 0, width = 7)
+	draw.ellipse((171, 10, 201, 40), outline = 0, fill = 0)
+	draw.ellipse((156, 68, 216, 128), outline = 0, fill = 0)
 	f = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 20)
 	draw.text((1,1),cdatetime, font = f, fill=0)
 	epd.display(epd.getbuffer(image))
 
-def timedRefresh():
+def timedRefresh(interval=60):
 	time.sleep(15)
 	onWake()
 
