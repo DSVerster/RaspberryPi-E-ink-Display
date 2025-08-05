@@ -1,4 +1,4 @@
-import sys, time, matplotlib
+import sys, time, matplotlib, threading
 from datetime import datetime
 from gpiozero import Button
 from signal import pause
@@ -55,12 +55,16 @@ def onWake():
 	cdatetime = now.strftime("%A\n%d %B\n%Y")
 	image = Image.new('1', (epd.height, epd.width), 255)
 	draw = ImageDraw.Draw(image)
-	draw.ellipse((94, 10, 250, 166), outline = 0, width = 7)
-	draw.ellipse((157, 0, 187, 30), outline = 0, fill = 0)
-	draw.ellipse((142, 58, 202, 118), outline = 0, fill = 0)
+	draw.ellipse((108, 10, 264, 166), outline = 0, width = 7)
+	draw.ellipse((171, 0, 201, 30), outline = 0, fill = 0)
+	draw.ellipse((156, 58, 216, 118), outline = 0, fill = 0)
 	f = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 20)
 	draw.text((1,1),cdatetime, font = f, fill=0)
 	epd.display(epd.getbuffer(image))
+
+def timedRefresh():
+	time.sleep(15)
+	onWake()
 
 def btnPress(btn):
 	pinNum = btn.pin.number
@@ -82,11 +86,12 @@ def btnPress(btn):
 
 print("Good day.")
 circle()
-time.sleep(3)
+time.sleep(1)
 onWake()
 
 btn1.when_pressed = btnPress
 btn2.when_pressed = btnPress
 btn3.when_pressed = btnPress
 btn4.when_pressed = btnPress
+threading.Thread(target=timedRefresh, args=(60,), daemon=True).start()
 pause()
