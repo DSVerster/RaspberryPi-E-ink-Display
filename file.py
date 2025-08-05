@@ -40,10 +40,10 @@ def getCPUTemp():
     except Exception as e:
         return "N/A"
 
-def getRepoStatus(REPOPATH):
+def getRepoStatus(path=REPOPATH):
     try:
-        subprocess.run(["git", "fetch"], cwd=REPOPATH, check=True)
-        result = subprocess.check_output(["git", "status"], cwd=REPOPATH).decode()
+        subprocess.run(["git", "fetch"], cwd=path, check=True)
+        result = subprocess.check_output(["git", "status"], cwd=path).decode()
 
         if "Your branch is up to date" in result:
             return ("Repo: ✅ Up to date")
@@ -54,11 +54,11 @@ def getRepoStatus(REPOPATH):
     except Exception as e:
         return ("Repo: ❓ Error")
 	
-def getRepoDate(REPOPATH):
+def getRepoDate(path=REPOPATH):
     try:
         result = subprocess.check_output(
             ["git", "log", "-1", "--format=%cd"],
-            cwd=REPOPATH
+            cwd=path
         ).decode().strip()
         return result
     except:
