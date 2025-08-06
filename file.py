@@ -175,5 +175,5 @@ btn1.when_pressed = btnPress
 btn2.when_pressed = btnPress
 btn3.when_pressed = btnPress
 btn4.when_pressed = btnPress
-threading.Thread(target=timedRefresh, args=(720,), daemon=True).start() #Refresh after 12 hours
+threading.Thread(target=timedRefresh, args=(900,), daemon=True).start() #Refresh after 12 hours
 pause()
