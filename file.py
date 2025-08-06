@@ -54,27 +54,31 @@ def getCPUTemp():
     except Exception as e:
         return ("Error")'''
 	
-def getLatestRepoDate(path=REPOPATH):
+def getRepoLastCommitDate(path=REPOPATH):
+    """
+    Gets the date of the last Git commit.
+    """
     try:
         result = subprocess.check_output(
-            ["git", "log", "-1", "--format=%Y-%m-%d %H:%M:%S"], #%cd
+            ["git", "log", "-1", "--format=%Y-%m-%d %H:%M:%S"],
             cwd=path,
-            timeout = 3
+            timeout=3
         ).decode().strip()
         return result
-    except:
-        return "Unknown"
-    
-def getRepoLastCommitDate(path=REPOPATH):
+    except Exception as e:
+        return f"Error: {e}"
+
+def getRepoCloneDate(path=REPOPATH):
+    """
+    Approximates the clone date using .git folder creation/modification time.
+    """
     try:
-        latest_time = 0
-        for root, dirs, files in os.walk(path):
-            for fname in files:
-                full_path = os.path.join(root, fname)
-                t = os.path.getmtime(full_path)
-                if t > latest_time:
-                    latest_time = t
-        return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(latest_time)) # %Y-%m-%d %H:%M:%S
+        git_dir = os.path.join(path, ".git")
+        if not os.path.exists(git_dir):
+            return "Unknown"
+
+        clone_time = os.path.getctime(git_dir)  # Creation time on Windows, last metadata change on Unix
+        return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(clone_time))
     except Exception as e:
         return f"Error: {e}"
 
@@ -130,8 +134,8 @@ def deviceInfo():
 	uptime = getUptime()
 	cpuTemp = getCPUTemp()
 	#repoStatus = getRepoStatus(REPOPATH)
-	repoDate = getLatestRepoDate(REPOPATH)
 	repoUpdateDate = getRepoLastCommitDate(REPOPATH)
+	repoDate = getRepoCloneDate(REPOPATH)
 	
 	image = Image.new('1', (epd.height, epd.width), 255)
 	draw = ImageDraw.Draw(image)
