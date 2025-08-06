@@ -74,7 +74,7 @@ def getRepoLastCommitDate(path=REPOPATH):
                 t = os.path.getmtime(full_path)
                 if t > latest_time:
                     latest_time = t
-        return time.strftime('%cd', time.localtime(latest_time)) # %Y-%m-%d %H:%M:%S
+        return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(latest_time)) # %Y-%m-%d %H:%M:%S
     except Exception as e:
         return f"Error: {e}"
 
