@@ -53,17 +53,6 @@ def getCPUTemp():
             return ("Unknown")  # Can't determine
     except Exception as e:
         return ("Error")'''
-	
-def getRepoLastCommitDate(path=REPOPATH):
-    try:
-        result = subprocess.check_output(
-            ["git", "log", "-1", "--date=format:%Y-%m-%d %H:%M:%S", "--format=%cd"],
-            cwd=path,
-            timeout=3
-        ).decode().strip()
-        return result
-    except Exception as e:
-        return f"Error: {e}"
 
 def getRepoCloneDate(path=REPOPATH):
     """
@@ -131,7 +120,6 @@ def deviceInfo():
 	uptime = getUptime()
 	cpuTemp = getCPUTemp()
 	#repoStatus = getRepoStatus(REPOPATH)
-	repoUpdateDate = getRepoLastCommitDate(REPOPATH)
 	repoDate = getRepoCloneDate(REPOPATH)
 	
 	image = Image.new('1', (epd.height, epd.width), 255)
@@ -140,8 +128,7 @@ def deviceInfo():
 	draw.text((1,1),("Current time: "+ctime), font = f, fill = 0)
 	draw.text((1, 26),("Uptime: "+ uptime), font = f, fill = 0)
 	draw.text((1, 51),("CPU Temp: " + cpuTemp), font = f, fill = 0)
-	draw.text((1, 76),("Repo commit:\n" + repoUpdateDate), font = f, fill = 0)
-	draw.text((1, 126),("Repo clone:\n" + repoDate), font = f, fill = 0)
+	draw.text((1, 126),("Last repo clone:\n" + repoDate), font = f, fill = 0)
 	epd.display(epd.getbuffer(image))
 
 def timedRefresh(i):
