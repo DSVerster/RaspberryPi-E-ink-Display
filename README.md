@@ -12,7 +12,7 @@ IMPORTANT: For the RaspberryPi to work with the e-screen, the lib files alre req
 Good luck finding the correct drivers for the screen!
 
 ## Python modules used:
-    import sys, time, matplotlib
+    import sys, time, matplotlib, threading, subprocess, os
     from datetime import datetime
     from gpiozero import Button
     from signal import pause

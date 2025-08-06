@@ -1,4 +1,4 @@
-import sys, time, matplotlib, threading, subprocess
+import sys, time, matplotlib, threading, subprocess, os
 from datetime import datetime
 from gpiozero import Button
 from signal import pause
@@ -46,15 +46,15 @@ def getRepoStatus(path=REPOPATH):
         result = subprocess.check_output(["git", "status"], cwd=path).decode()
 
         if "Your branch is up to date" in result:
-            return ("Repo: ✅ Up to date")
+            return ("Up to date")
         elif "behind" in result:
-            return ("Repo: ❌ Out of date")
+            return ("Out of date")
         else:
-            return ("Repo: ❓ Unknown")  # Can't determine
+            return ("Unknown")  # Can't determine
     except Exception as e:
-        return ("Repo: ❓ Error")
+        return ("Error")
 	
-def getRepoDate(path=REPOPATH):
+def getLatestRepoDate(path=REPOPATH):
     try:
         result = subprocess.check_output(
             ["git", "log", "-1", "--format=%cd"],
@@ -64,6 +64,20 @@ def getRepoDate(path=REPOPATH):
         return result
     except:
         return "Unknown"
+    
+def getRepoLastCommitDate(path=REPOPATH):
+    try:
+        latest_time = 0
+        for root, dirs, files in os.walk(path):
+            for fname in files:
+                full_path = os.path.join(root, fname)
+                t = os.path.getmtime(full_path)
+                if t > latest_time:
+                    latest_time = t
+        return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(latest_time))
+    except Exception as e:
+        return f"Error: {e}"
+
 ###
 # Display altering functions:
 ###
@@ -115,8 +129,9 @@ def deviceInfo():
 	ctime = now.strftime("%H:%M:%S")
 	uptime = getUptime()
 	cpuTemp = getCPUTemp()
-	repoStatus = getRepoStatus(REPOPATH)
-	repoDate = getRepoDate(REPOPATH)
+	#repoStatus = getRepoStatus(REPOPATH)
+	repoDate = getLatestRepoDate(REPOPATH)
+	repoUpdateDate = getRepoLastCommitDate(REPOPATH)
 	
 	image = Image.new('1', (epd.height, epd.width), 255)
 	draw = ImageDraw.Draw(image)
@@ -124,7 +139,7 @@ def deviceInfo():
 	draw.text((1,1),("Current time: "+ctime), font = f, fill = 0)
 	draw.text((1, 26),("Uptime: "+ uptime), font = f, fill = 0)
 	draw.text((1, 51),("CPU Temp: " + cpuTemp), font = f, fill = 0)
-	draw.text((1, 76),("Repo status:\n" + repoStatus), font = f, fill = 0)
+	draw.text((1, 76),("Repo clone: " + repoUpdateDate), font = f, fill = 0)
 	draw.text((1, 126),("Repo date:\n" + repoDate), font = f, fill = 0)
 	epd.display(epd.getbuffer(image))
 
