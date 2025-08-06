@@ -55,12 +55,9 @@ def getCPUTemp():
         return ("Error")'''
 	
 def getRepoLastCommitDate(path=REPOPATH):
-    """
-    Gets the date of the last Git commit.
-    """
     try:
         result = subprocess.check_output(
-            ["git", "log", "-1", "--format=%Y-%m-%d %H:%M:%S"],
+            ["git", "log", "-1", "--date=format:%Y-%m-%d %H:%M:%S", "--format=%cd"],
             cwd=path,
             timeout=3
         ).decode().strip()
